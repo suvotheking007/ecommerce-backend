@@ -6,24 +6,39 @@ const codes = Config.httpCodes;
 
 module.exports = {
   getOrderDetails: function (req, res) {
-    let data = req.body;
+    const data = req.body;
+    const response = {
+      success: false,
+      msg: "The arguments given is not what is expected",
+      status: codes.badRequest,
+    };
 
-    Order.listOrderDetails(data, (err, result) => {
-      if (err) {
-        return res.send({
-          success: false,
-          msg: "Unable to get order details",
-          status: codes.success,
-        });
-      }
+    // ? -> Check if the request is valid or not
+    if (data.user_id) {
+      // success: As the request is valid
 
-      return res.send({
-        success: true,
-        msg: "Successfully got order details",
-        status: 200,
-        orderDetails: result,
+      // # -> Get the list of all the orders by this user
+      Order.listOrderDetails(data, (err, orders) => {
+        if (err) {
+          response.status = codes.internalServerError;
+          response.msg = `Unable to fetch the orders for the specified user`;
+          response.error = err;
+
+          return res.status(response.status).send(response);
+        }
+
+        response.status = codes.success;
+        response.msg = `Successfully fetched the order details for the specified user`;
+        response.data = orders;
+        response.success = true;
+
+        return res.status(response.status).send(response);
       });
-    });
+    } else {
+      // notSuccess: As the request is invalid
+
+      return res.status(response.status).send(response);
+    }
   },
 
   createOrder: function (req, res) {
@@ -34,14 +49,13 @@ module.exports = {
       status: codes.badRequest,
     };
 
-    if(data.quantity == undefined){
-      data.quantity = 1
+    if (data.quantity == undefined) {
+      data.quantity = 1;
     }
 
     // ? -> Check if the request is valid or not
     if (data.user_id && data.product_id) {
       // success: As the request is valid
-
 
       // # -> Look for the details of the product entered by the user
       Product.getProductDetails(data, (err, products) => {
