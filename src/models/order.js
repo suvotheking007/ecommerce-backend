@@ -24,7 +24,7 @@ module.exports = {
   },
 
   addOrder: function (data, cb) {
-    let sql = `insert into OrderDetails 
+    let sql = `insert into OrderDetails
                (Total, UserID, OrderStatus, CreatedAt, UpdatedAt)
                values
                (?, ?, 1, now(), now());`;
@@ -39,7 +39,7 @@ module.exports = {
   },
 
   editOrder: function (data, cb) {
-    let sql = `update OrderDetails 
+    let sql = `update OrderDetails
                set Total = ?, OrderStatus = ?, UpdatedAt = now()
                where
                ID = ?`;
@@ -64,12 +64,12 @@ module.exports = {
   },
 
   getOrderDetails: function (data, cb) {
-    let sql = `select 
-               od.ID, od.Total, p.ID as ProductID, 
+    let sql = `select
+               od.ID, od.Total, p.ID as ProductID,
                p.Name as ProductName, p.Price as ProductPrice,
                oi.Quantity as ProductQuantity
                from
-               OrderDetails as od 
+               OrderDetails as od
                left join OrderItems as oi on od.ID = oi.OrderID
                left join Products as p on p.ID = oi.ProductID
                where
@@ -114,7 +114,7 @@ module.exports = {
 
   deleteOrderItem: function (data, cb) {
     let sql = `delete from OrderItems
-               where 
+               where
                OrderID = ? and ProductID = ?`;
     let values = [];
     values.push(data.order_id);
@@ -140,9 +140,9 @@ module.exports = {
 
   getOrderProduct: function (data, cb) {
     const values = [];
-    let sql = `select * from 
-               OrderItems inner join Products on OrderItems.ProductID = Products.ID where 
-               Products.ID = ? and OrderItems.OrderID = ?;`;
+    let sql = `select * from
+               OrderItems inner join Products on OrderItems.ProductID = Products.ID where
+               Products.ID = ? and OrderItems.OrderID = ? limit 1;`;
 
     values.push(data.product_id);
     values.push(data.order_id);

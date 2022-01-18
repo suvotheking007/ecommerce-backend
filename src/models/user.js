@@ -93,16 +93,6 @@ module.exports = {
     });
   },
 
-  getUserByName: function (name, cb) {
-    let sql = "select * from Users where Username = ?";
-    const values = [];
-    values.push(name);
-
-    sqlConnection.executeQuery(sql, values, (err, result) => {
-      cb(err, result);
-    });
-  },
-
   getUserDetails: function (id, cb) {
     let sql = "select * from UserDetails where UserID = ?";
     const values = [];

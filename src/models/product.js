@@ -5,20 +5,20 @@ module.exports = {
     let sql = "select ID as productId, Name as name from Products";
     const values = [];
 
-    if (data.categoryId) {
+    if (data.category_id) {
       sql += " where CategoryID = ?";
       values.push(data.categoryId);
 
-      if (data.minPrice) {
+      if (data.min_price) {
         sql += " and Price >= ?";
-        values.push(data.minPrice);
+        values.push(data.min_price);
       }
-    } else if (data.minPrice) {
+    } else if (data.min_price) {
       sql += " where Price >= ?";
       values.push(data, minPrice);
-    } else if (data.maxPrice) {
+    } else if (data.max_price) {
       sql += " where Price <= ?";
-      values.push(data.maxPrice);
+      values.push(data.max_price);
     }
 
     sqlConnection.executeQuery(sql, values, (err, result) => {
@@ -28,7 +28,7 @@ module.exports = {
 
   addProduct: function (data, cb) {
     let sql = `insert into Products (Name, Description, Price, VendorID, CategoryID, CreatedAt, UpdatedAt)
-                 values 
+                 values
                  (?, ?, ?, ?, ?, now(), now())`;
     let values = [];
     values.push(data.name);
@@ -53,8 +53,8 @@ module.exports = {
   },
 
   getProductDetails: function (data, cb) {
-    let sql = `select p.Name, p.Description, p.Price, 
-               if((select count(*) from OrderDetails as od 
+    let sql = `select p.Name, p.Description, p.Price,
+               if((select count(*) from OrderDetails as od
                    left join OrderItems as oi on od.ID = oi.OrderID
                    where p.ID = oi.ProductID and od.UserID = ? and od.OrderStatus = 1) > 0, 1, 0) as addedToCart
                 from Products as p
