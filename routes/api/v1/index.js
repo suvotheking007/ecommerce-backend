@@ -15,6 +15,5 @@ router.post("/order/edit", orderController.editOrder);
 router.post("/user/signup", userController.signup);
 router.post("/user/login", userController.login);
 router.post("/user/register", userController.register);
-router.post("/user/details", userController.getUserDetails);
 
 module.exports = router;
