@@ -11,7 +11,7 @@ module.exports = {
     };
 
     // # -> Go for fetching all the categories that are available in the database
-    Category.listCategories(data, (err, categories) => {
+    Category.listCategories((err, categories) => {
       if (err) {
         response.status = codes.internalServerError;
         response.msg = `Unable to fetch categories`;
